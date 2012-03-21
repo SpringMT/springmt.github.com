@@ -122,7 +122,7 @@ http {
 ### アプリ
 * 今回のテストでは、Hello World!を表示させるだけのアプリを作りました
 
-* <script src="https://gist.github.com/2137511.js?file=gistfile1.txt"></script>
+* githubへ
 
 
 !slide
