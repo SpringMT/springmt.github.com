@@ -2190,7 +2190,7 @@ body {
   color: rgb(102, 102, 102);
   text-shadow: 0 1px 1px rgba(0, 0, 0, .1);
 
-  font-size: 30px;
+  font-size: 33px;
   line-height: 36px;
 
   letter-spacing: -1px;
@@ -2203,7 +2203,7 @@ b {
 
 strong {
   font-weight: 600;
-  font-size: 33px;
+  font-size: 35px;
   color: rgb(234, 92, 96);
 }
 
@@ -2290,7 +2290,7 @@ h2 {
 }
 
 h3 {
-  font-size: 35px;
+  font-size: 40px;
   line-height: 36px;
   padding: 0;
   margin: 0;
@@ -2584,7 +2584,7 @@ article.smaller q::after {
 <ul>
 <li><p>twitter id : <strong>@Spring_MT</strong> <br>
 <image style="height: 200px" src="images/tiwtter_logo.jpg"/></p></li>
-<li><p>今は福岡の10xlabでインフラ&amp;アプリ開発をしてます。</p></li>
+<li><p>福岡の10xlabでインフラ&amp;アプリ開発をしてます。</p></li>
 </ul>
 
 
@@ -2647,8 +2647,7 @@ article.smaller q::after {
   self.abstract_class = true
   establish_connection(
     :adapter  =&gt; &#39;mysql2&#39;,
-    :encoding =&gt; &quot;utf8&quot;,
-    :reconnect =&gt; &quot;false&quot;,
+    :encoding =&gt; &#39;utf8&#39;,
     :username =&gt; &#39;root&#39;,
     :password =&gt; &#39;&#39;,
     :database =&gt; &#39;user&#39;,
@@ -2667,7 +2666,7 @@ obj = Test.new
 
 <ol>
 <li>Mysql2::Client.new(config)でC APIの<strong>mysql&#95;real&#95;connect</strong>を使って接続<br></li>
-<li><strong>&quot;SET SQL&#95;AUTO&#95;IS&#95;NULL=0, NAMES &#39;utf8&#39;, @@wait&#95;timeout = wail&#95;time&quot;</strong><br>
+<li>&quot;<strong>SET SQL&#95;AUTO&#95;IS&#95;NULL=0, NAMES &#39;utf8&#39;, @@wait&#95;timeout = wail&#95;time</strong>&quot;<br>
 を打つ<br>
 (NAMESはencodingを設定していると追加されます)</li>
 </ol>
@@ -2676,10 +2675,10 @@ obj = Test.new
 </article>
 
 <article>
-<h3>SET SQL&#95;AUTO&#95;IS&#95;NULL=0</h3>
+<h3>SET SQL&#95;AUTO&#95;IS&#95;NULL</h3>
 
 <ul>
-<li>AUTO_INCREMENTを使ってると、insertを打った直後の特定のselectで挙動がおかしくなります。</li>
+<li>AUTO_INCREMENTを使ってSQL&#95;AUTO&#95;IS&#95;NULLをtrueにしていると、insertを打った直後の特定のselectで挙動がおかしくなります。</li>
 <li>大規模だと、AUTO_INCREMENTってほとんど使わないので、打たないケースもあるかもです。</li>
 </ul>
 
@@ -2721,9 +2720,13 @@ SELECT * FROM Test WHERE ID IS NULL;
 <h3>prepareがない</h3>
 
 <ul>
-<li><p>去年のmysql-casualのadvent calenderの@tagomorisさんのエントリでも言及されていましたが、mysql2にはprepareはありません &gt;_&lt;</p></li>
-<li><p>ActiveRecordにもありません</p></li>
-<li><p>なので、クエリを実行する場合(特にSQLを生で書くとき)は、自前で文字列をエスケープして、SQL文を組み立てます</p></li>
+<li><p>mysql2には<strong>prepareはありません</strong> &gt;_&lt;</p>
+
+<ul>
+<li>参照 : <a href="http://d.hatena.ne.jp/tagomoris/20111210/1323502295">RubyでMySQLに繋ぐためのruby-mysqlとmysql2</a></li>
+</ul></li>
+<li><p><strong>ActiveRecordにもありません</strong> &gt;_&lt;</p></li>
+<li><p>なので、クエリを実行する場合(特にSQLを生で書くとき)は、自前で文字列をエスケープして、SQL文を組み立てる必要があります</p></li>
 </ul>
 
 
@@ -2733,13 +2736,14 @@ SELECT * FROM Test WHERE ID IS NULL;
 <h3>prepareがない</h3>
 
 <ul>
-<li>エスケープには、C APIの<strong>mysql&#95;real&#95;escape&#95;string</strong>を使っているsanitize*メソッドを使います<br>
-(sanitizeを呼び出すたびにmysqlとやり取りします)</li>
-<li>エスケープは下記のようにします</li>
+<li><p>エスケープには、C APIの<strong>mysql&#95;real&#95;escape&#95;string</strong>を使ったsanitize*メソッドを使います<br>
+(sanitizeを呼び出すたびにMysqlとやり取りします)</p></li>
+<li><p>エスケープ処理は下記の通り</p></li>
 </ul>
 
 <pre><code>string = &quot;あいう&#39;;えお&quot;
-hash  =  { :name =&gt; &quot;foo&#39;bar&quot;, :group_id =&gt; 4 }
+hash  =  { name: &quot;foo&#39;bar&quot;, group_id: 4 }
+
 puts Test.sanitize(string)
 puts Test.send(:sanitize_sql, hash)
 
@@ -2763,7 +2767,7 @@ obj.connection.execute(&#39;SELECT * FROM City;&#39;)
 </code></pre>
 
 <ul>
-<li>クエリー実行では、mysql2経由でC APIの<strong>mysql&#95;send&#95;query</strong>経由でsqlを実行します<br>
+<li>クエリー実行では、mysql2経由でC APIの<strong>mysql&#95;send&#95;query</strong>経由でsqlを実行し、mysql<em>read</em>query_resultを自前で呼んで結果を返します。<br>
 (<strong>mysql&#95;real&#95;query</strong>ではないです)</li>
 </ul>
 
@@ -2774,11 +2778,10 @@ obj.connection.execute(&#39;SELECT * FROM City;&#39;)
 <h3>mysql&#95;send&#95;query</h3>
 
 <ul>
-<li><p><strong>mysql&#95;send&#95;query</strong>を使っているのは、ノンブロッキングでSQLを実行できるようにするためです 
+<li><p><strong>mysql&#95;send&#95;query</strong>を使っているのは、ノンブロッキングでSQLを実行できるようにするためです<br>
 (<strong>mysql&#95;real&#95;query</strong>を使うと、結果が返ってくるまでまで待ちます)</p></li>
-<li><p>ただし、Railsでmysqlを使っている場合は、ノンブロッキングで実行するオプションはありません<br>
-(自分は見つけられませんでした &gt;_&lt;)</p></li>
-<li><p>DBD-mysqlだと、4.019から同じような仕組みが実装されています。</p></li>
+<li><p>DBD-mysqlだと、4.019から同じような仕組みが実装されています。<br>
+(dbdimp.c  3222行目あたりです。)</p></li>
 </ul>
 
 
@@ -2809,6 +2812,12 @@ mysql_real_query(MYSQL *mysql, const char *query, ulong length)
   DBUG_RETURN((int) (*mysql-&gt;methods-&gt;read_query_result)(mysql));
 }
 </code></pre>
+
+
+</article>
+
+<article>
+<h2>デモ</h2>
 
 
 </article>
@@ -2928,6 +2937,20 @@ COMMIT or ROLLBACK
 <ul>
 <li>5月中旬を予定しています。</li>
 <li>もし、福岡の方がいましたら是非ご参加お願いします!!</li>
+</ul>
+
+
+</article>
+
+<article>
+<h2>おまけ</h2>
+
+<ul>
+<li>Railsを使って、中、大規模のサイトを作ろうとしたとき、複数DBを使いながら、master⇔slave構s造を取るmodelを構成するのが大分ネックになると思います。</li>
+<li>そもそもrailsは複数DBで使うことを想定していないので。。。</li>
+<li>ここの構成で悩んでいます。</li>
+<li>もう、Rails捨てろよとか言われそうですが、、、</li>
+<li></li>
 </ul>
 
 </article>

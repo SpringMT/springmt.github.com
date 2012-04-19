@@ -8,7 +8,7 @@
 * twitter id : **@Spring_MT** <br>
 <image style="height: 200px" src="images/tiwtter_logo.jpg"/>
 
-* 今は福岡の10xlabでインフラ&アプリ開発をしてます。
+* 福岡の10xlabでインフラ&アプリ開発をしてます。
 
 ## 今Railsを使って開発しています。
 * Railsのバージョンは3.2.2
@@ -37,8 +37,7 @@ class Test < ActiveRecord::Base
   self.abstract_class = true
   establish_connection(
     :adapter  => 'mysql2',
-    :encoding => "utf8",
-    :reconnect => "false",
+    :encoding => 'utf8',
     :username => 'root',
     :password => '',
     :database => 'user',
@@ -54,13 +53,13 @@ obj = Test.new
 ### Mysqlへの接続でやっていること
 
 1. Mysql2::Client.new(config)でC APIの**mysql&#95;real&#95;connect**を使って接続  
-1. **"SET SQL&#95;AUTO&#95;IS&#95;NULL=0, NAMES 'utf8', @@wait&#95;timeout = wail&#95;time"**  
+1. "**SET SQL&#95;AUTO&#95;IS&#95;NULL=0, NAMES 'utf8', @@wait&#95;timeout = wail&#95;time**"  
 を打つ  
 (NAMESはencodingを設定していると追加されます)
 
 
-### SET SQL&#95;AUTO&#95;IS&#95;NULL=0
-* AUTO_INCREMENTを使ってると、insertを打った直後の特定のselectで挙動がおかしくなります。
+### SET SQL&#95;AUTO&#95;IS&#95;NULL
+* AUTO_INCREMENTを使ってSQL&#95;AUTO&#95;IS&#95;NULLをtrueにしていると、insertを打った直後の特定のselectで挙動がおかしくなります。
 * 大規模だと、AUTO_INCREMENTってほとんど使わないので、打たないケースもあるかもです。
 
 ### SET SQL&#95;AUTO&#95;IS&#95;NULLのテスト
@@ -89,21 +88,25 @@ SELECT * FROM Test WHERE ID IS NULL;
 # 3. クエリーを実行
 
 ### prepareがない
-* 去年のmysql-casualのadvent calenderの@tagomorisさんのエントリでも言及されていましたが、mysql2にはprepareはありません >_<
 
-* ActiveRecordにもありません
+* mysql2には**prepareはありません** >_<
+    * 参照 : [RubyでMySQLに繋ぐためのruby-mysqlとmysql2](http://d.hatena.ne.jp/tagomoris/20111210/1323502295)
 
-* なので、クエリを実行する場合(特にSQLを生で書くとき)は、自前で文字列をエスケープして、SQL文を組み立てます
+* **ActiveRecordにもありません** >_<
+
+* なので、クエリを実行する場合(特にSQLを生で書くとき)は、自前で文字列をエスケープして、SQL文を組み立てる必要があります
 
 
 ### prepareがない
-* エスケープには、C APIの**mysql&#95;real&#95;escape&#95;string**を使っているsanitize*メソッドを使います  
+* エスケープには、C APIの**mysql&#95;real&#95;escape&#95;string**を使ったsanitize*メソッドを使います  
 (sanitizeを呼び出すたびにMysqlとやり取りします)
-* エスケープは下記のようにします
+
+* エスケープ処理は下記の通り
 
 ~~~
 string = "あいう';えお"
-hash  =  { :name => "foo'bar", :group_id => 4 }
+hash  =  { name: "foo'bar", group_id: 4 }
+
 puts Test.sanitize(string)
 puts Test.send(:sanitize_sql, hash)
 
@@ -121,18 +124,16 @@ obj = Test.new
 obj.connection.execute('SELECT * FROM City;')  
 ~~~
 
-* クエリー実行では、mysql2経由でC APIの**mysql&#95;send&#95;query**経由でsqlを実行します  
+* クエリー実行では、mysql2経由でC APIの**mysql&#95;send&#95;query**経由でsqlを実行し、mysql_read_query_resultを自前で呼んで結果を返します。  
 (**mysql&#95;real&#95;query**ではないです)
 
 ### mysql&#95;send&#95;query
 
-* **mysql&#95;send&#95;query**を使っているのは、ノンブロッキングでSQLを実行できるようにするためです 
+* **mysql&#95;send&#95;query**を使っているのは、ノンブロッキングでSQLを実行できるようにするためです  
 (**mysql&#95;real&#95;query**を使うと、結果が返ってくるまでまで待ちます)
 
-* ただし、RailsでMysqlを使っている場合は、ノンブロッキングで実行するオプションはありません   
-(自分は見つけられませんでした >_<)
-
-* DBD-mysqlだと、4.019から同じような仕組みが実装されています。
+* DBD-mysqlだと、4.019から同じような仕組みが実装されています。  
+(dbdimp.c  3222行目あたりです。)
 
 ### mysql&#95;send&#95;queryのソース
 * sql-common/client.c
@@ -156,6 +157,8 @@ mysql_real_query(MYSQL *mysql, const char *query, ulong length)
   DBUG_RETURN((int) (*mysql->methods->read_query_result)(mysql));
 }
 ~~~
+
+## デモ
 
 
 ### sqlを自前で実行する
@@ -232,6 +235,12 @@ COMMIT or ROLLBACK
 * もし、福岡の方がいましたら是非ご参加お願いします!!
 
 
+## おまけ
+* Railsを使って、中、大規模のサイトを作ろうとしたとき、複数DBを使いながら、master⇔slave構s造を取るmodelを構成するのが大分ネックになると思います。
+* そもそもrailsは複数DBで使うことを想定していないので。。。
+* ここの構成で悩んでいます。
+* もう、Rails捨てろよとか言われそうですが、、、
+* 
 
 
 
