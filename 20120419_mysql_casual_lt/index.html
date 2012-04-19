@@ -2596,18 +2596,13 @@ article.smaller q::after {
 <ul>
 <li>Railsのバージョンは3.2.2</li>
 <li>DBにはもちろんMysqlを使っています。</li>
-<li>ローカルのマシン(MBA)に、mysqld_multiを使ってmasterとslaveを立ててます
-
-<ul>
-<li><a href="http://spring-mt.tumblr.com/post/18485897722/mac-osx-replication">Mac OSXでカジュアルにreplicationしてみる</a></li>
-</ul></li>
 </ul>
 
 
 </article>
 
 <article>
-<h1>RailsでどうやってMysqlを操作しているか一通り見てみました</h1>
+<h1>Rails⇔Mysqlを色々追っていたので、ネタにしてみました</h1>
 
 
 </article>
@@ -2628,9 +2623,13 @@ article.smaller q::after {
 <article>
 <h1>1. Railsのmodelの構成</h1>
 
-<ul>
-<li>図が入ります</li>
-</ul>
+
+</article>
+
+<article>
+<h3>Railsのmodelの構成</h3>
+
+<p><img src="images/rails_model.jpg" alt="image"></p>
 
 
 </article>
@@ -2659,8 +2658,6 @@ article.smaller q::after {
 end
 obj = Test.new
 </code></pre>
-
-<p>これで、コネクションが貼れます。</p>
 
 
 </article>
@@ -2736,7 +2733,7 @@ SELECT * FROM Test WHERE ID IS NULL;
 <h3>prepareがない</h3>
 
 <ul>
-<li>エスケープには、C APIのmysql&#95;real&#95;escape&#95;stringを使っているsanitize*メソッドを使います<br>
+<li>エスケープには、C APIの<strong>mysql&#95;real&#95;escape&#95;string</strong>を使っているsanitize*メソッドを使います<br>
 (sanitizeを呼び出すたびにmysqlとやり取りします)</li>
 <li>エスケープは下記のようにします</li>
 </ul>
@@ -2766,8 +2763,8 @@ obj.connection.execute(&#39;SELECT * FROM City;&#39;)
 </code></pre>
 
 <ul>
-<li>クエリー実行では、mysql2経由でC APIのmysql&#95;send&#95;query経由でsqlを実行します<br>
-(mysql&#95;real&#95;queryではないです)</li>
+<li>クエリー実行では、mysql2経由でC APIの<strong>mysql&#95;send&#95;query</strong>経由でsqlを実行します<br>
+(<strong>mysql&#95;real&#95;query</strong>ではないです)</li>
 </ul>
 
 
@@ -2777,8 +2774,8 @@ obj.connection.execute(&#39;SELECT * FROM City;&#39;)
 <h3>mysql&#95;send&#95;query</h3>
 
 <ul>
-<li><p>mysql&#95;send&#95;queryを使っているのは、ノンブロッキングでSQLを実行させるためです 
-(mysql&#95;real&#95;queryを使うと、結果が返ってくるまでまで待ちます)</p></li>
+<li><p><strong>mysql&#95;send&#95;query</strong>を使っているのは、ノンブロッキングでSQLを実行できるようにするためです 
+(<strong>mysql&#95;real&#95;query</strong>を使うと、結果が返ってくるまでまで待ちます)</p></li>
 <li><p>ただし、Railsでmysqlを使っている場合は、ノンブロッキングで実行するオプションはありません<br>
 (自分は見つけられませんでした &gt;_&lt;)</p></li>
 <li><p>DBD-mysqlだと、4.019から同じような仕組みが実装されています。</p></li>

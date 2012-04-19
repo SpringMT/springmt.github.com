@@ -13,10 +13,8 @@
 ## 今Railsを使って開発しています。
 * Railsのバージョンは3.2.2
 * DBにはもちろんMysqlを使っています。
-* ローカルのマシン(MBA)に、mysqld_multiを使ってmasterとslaveを立ててます
-    * [Mac OSXでカジュアルにreplicationしてみる](http://spring-mt.tumblr.com/post/18485897722/mac-osx-replication)
 
-# RailsでどうやってMysqlを操作しているか一通り見てみました
+# Rails⇔Mysqlを色々追っていたので、ネタにしてみました
 
 # 大枠で下記4つについてお話します。
 1. Railsのmodelの構成
@@ -26,7 +24,9 @@
 
 
 # 1. Railsのmodelの構成
-* 図が入ります
+
+### Railsのmodelの構成
+![image](images/rails_model.jpg)
 
 # 2. Mysqlへの接続
 
@@ -49,7 +49,6 @@ end
 obj = Test.new
 ~~~
 
-これで、コネクションが貼れます。
 
 
 ### Mysqlへの接続でやっていること
@@ -98,8 +97,8 @@ SELECT * FROM Test WHERE ID IS NULL;
 
 
 ### prepareがない
-* エスケープには、C APIのmysql&#95;real&#95;escape&#95;stringを使っているsanitize*メソッドを使います  
-(sanitizeを呼び出すたびにmysqlとやり取りします)
+* エスケープには、C APIの**mysql&#95;real&#95;escape&#95;string**を使っているsanitize*メソッドを使います  
+(sanitizeを呼び出すたびにMysqlとやり取りします)
 * エスケープは下記のようにします
 
 ~~~
@@ -122,15 +121,15 @@ obj = Test.new
 obj.connection.execute('SELECT * FROM City;')  
 ~~~
 
-* クエリー実行では、mysql2経由でC APIのmysql&#95;send&#95;query経由でsqlを実行します  
-(mysql&#95;real&#95;queryではないです)
+* クエリー実行では、mysql2経由でC APIの**mysql&#95;send&#95;query**経由でsqlを実行します  
+(**mysql&#95;real&#95;query**ではないです)
 
 ### mysql&#95;send&#95;query
 
-* mysql&#95;send&#95;queryを使っているのは、ノンブロッキングでSQLを実行させるためです 
-(mysql&#95;real&#95;queryを使うと、結果が返ってくるまでまで待ちます)
+* **mysql&#95;send&#95;query**を使っているのは、ノンブロッキングでSQLを実行できるようにするためです 
+(**mysql&#95;real&#95;query**を使うと、結果が返ってくるまでまで待ちます)
 
-* ただし、Railsでmysqlを使っている場合は、ノンブロッキングで実行するオプションはありません   
+* ただし、RailsでMysqlを使っている場合は、ノンブロッキングで実行するオプションはありません   
 (自分は見つけられませんでした >_<)
 
 * DBD-mysqlだと、4.019から同じような仕組みが実装されています。
