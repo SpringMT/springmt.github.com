@@ -224,6 +224,11 @@ COMMIT or ROLLBACK
 ### 複数DB master、slaveの構成
 * ここは、railsのおはなしになっちゃうのでしません
 
+### ソース公開しています
+* モックなんで公開してます
+* 盛大にdisってください!!!
+* [https://github.com/10xlab/register_mock](https://github.com/10xlab/register_mock)
+
 
 # ここまでは前フリで・・・
 
@@ -233,6 +238,8 @@ COMMIT or ROLLBACK
 ## 一応人数はそれなりに集まりそうなので、場所とか決まったら、atnd立てます。
 * 5月中旬を予定しています。
 * もし、福岡の方がいましたら是非ご参加お願いします!!
+
+
 
 
 ## おまけ
