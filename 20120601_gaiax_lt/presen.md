@@ -312,6 +312,11 @@ drwxr-xr-x. 18 root     root     4.0K May 29 12:28 ..
 * IRCログをwebから検索できる？
 * Hadoop対応
 
+## Fluetnd概略
+* ちょっと復習
+
+<image class="centered" style="height: 600px" src="images/slide1.png"/>
+
 ## 理想の構成
 <image class="centered" style="height: 500px" src="images/slide2.png"/>
 
@@ -319,11 +324,6 @@ drwxr-xr-x. 18 root     root     4.0K May 29 12:28 ..
 * **Deliver** : LB的な役割 (受けて流すだけ)
 * **Worker**  : 受けっとたログを解析、処理する
 * **Watcher** : 監視用
-
-## Fluetnd概略
-* ちょっと復習
-
-<image class="centered" style="height: 600px" src="images/slide1.png"/>
 
 
 ## 今回なんとかしたい構成
@@ -394,7 +394,7 @@ gpgcheck=0
 # /etc/init.d/td-agent start
 ~~~~
 
-# Warning of "installation is missing psych"
+## Warning of "installation is missing psych"
 
 <blockquote class="twitter-tweet tw-align-center" lang="ja"><p>とりあえず psych から libyaml 依存性を取り除いて欲しいですね（キリッ</p>&mdash; Kazuki Ohtaさん (@kzk_mover) <a href="https://twitter.com/kzk_mover/status/194621144446418945" data-datetime="2012-04-24T02:57:51+00:00">4月 24, 2012</a></blockquote>
 <script src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
@@ -424,10 +424,14 @@ gpgcheck=0
 ## Reference 2
 * [Fluentd official](http://fluentd.org/)
 * [イベントログ収集ツール fluent リリース！](http://d.hatena.ne.jp/viver/20110929/p1)
-* [Fluentd Casual Talks 開催してきた＆しゃべってきた](http://d.hatena.ne.jp/tagomoris/20120521/1337569528)
+
 * [fluentd のベンチマークとってみたよ！](http://d.hatena.ne.jp/tagomoris/20111117/132152672)
 * [Perl から Fluentd にログ出力 - Fluent::Logger リリース](http://d.hatena.ne.jp/sfujiwara/20120131/1327973658)
+* [Subsonic+Nginxのアクセスログをfluentdを利用してMongoDBに入れてみた](http://blog.glidenote.com/blog/2012/05/21/fluentd-nginx-mongodb/)
 
+* [Fluentd Casual Talks 開催してきた＆しゃべってきた](http://d.hatena.ne.jp/tagomoris/20120521/1337569528)
+* [Fluentd Casual Talksに参加してきました](http://6pongi.wordpress.com/2012/05/31/fluentcasualtalks/)
+* [Fluentd meetup in Japanに参加してきました。](http://tech.hatenablog.com/entry/2012/02/05/000100)
 
 ## slide
 * [Distributed Stream Processing on Fluentd / #fluentd](http://www.slideshare.net/tagomoris/distributed-stream-processing-on-fluentd-fluentd)
@@ -438,8 +442,9 @@ gpgcheck=0
 
 
 ## github
-* []()
+* [fluent / fluentd](https://github.com/fluent/fluentd/)
 * [fluent-logger-ruby](https://github.com/fluent/fluent-logger-ruby)
+
 
 ## Tool
 * [a Ruby regular expression editor](http://www.rubular.com/)
