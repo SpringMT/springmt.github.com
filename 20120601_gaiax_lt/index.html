@@ -2807,10 +2807,10 @@ article.smaller q::after {
 <pre><code>&lt;source&gt;
   type tail
   path /var/log/nginx/access.log
-  tag nginx.cowork
+  tag nginx.hoge
   format /^(?&lt;host&gt;[^ ]*)\t\[(?&lt;time&gt;[^\]]*)\]\t&quot;(?&lt;method&gt;\S+)(?: +(?&lt;path&gt;[^ ]*) +\S*)?&quot;\t(?&lt;status&gt;[^ ]*)\t(?&lt;body_size&gt;[^ ]*)\t(?&lt;response_time&gt;[^ ]*)\t(?:&quot;(?&lt;agent&gt;[^\&quot;]*)&quot;\t&quot;(?&lt;referer&gt;[^\&quot;]*)&quot;\t&quot;(?&lt;http_x_forwarded_for&gt;[^\&quot;]*)&quot;\t(?&lt;gzip_ratio&gt;[^ ]*))?$/
   time_format %d/%b/%Y:%H:%M:%S %z
-  pos_file /var/log/td-agent/tmp/nginx.cowork.pos
+  pos_file /var/log/td-agent/tmp/nginx.hoge.pos
 &lt;/source&gt;
 </code></pre>
 
@@ -2820,7 +2820,7 @@ article.smaller q::after {
 <article>
 <h2>吐き出されるログ</h2>
 
-<pre><code>20120530T090216+0900    nginx.cowork    {
+<pre><code>20120530T090216+0900    nginx.hoge  {
 &quot;host&quot;:&quot;192.168.110.160&quot;,
 &quot;method&quot;:&quot;GET&quot;,
 &quot;path&quot;:&quot;/register/new&quot;,
@@ -3177,9 +3177,9 @@ TimeSliecedOutputがデフォルトbuf_file
 <article>
 <h2>Output設定例(out_file)</h2>
 
-<pre><code>&lt;match nginx.cowork&gt;
+<pre><code>&lt;match nginx.hoge&gt;
   type file
-  path /var/log/archive/cowork.access
+  path /var/log/archive/hoge.access
   time_slice_format %Y%m%d
   time_slice_wait 1m
   time_format %Y%m%d %H:%M:%S
@@ -3231,9 +3231,9 @@ TimeSliecedOutputがデフォルトbuf_file
 total 20K
 drwxrwxrwx   2 root     root     4.0K May 31 08:21 .
 drwxr-xr-x. 18 root     root     4.0K May 29 12:28 ..
--rw-rw-rw-   1 td-agent td-agent  859 May 30 00:10 cowork.access.20120529_0.log.gz
--rw-rw-rw-   1 td-agent td-agent  378 May 31 00:10 cowork.access.20120530_0.log.gz
--rw-rw-rw-   1 td-agent td-agent  753 May 31 14:07 cowork.access.20120531.b4c14936767dad3e2
+-rw-rw-rw-   1 td-agent td-agent  859 May 30 00:10 hoge.access.20120529_0.log.gz
+-rw-rw-rw-   1 td-agent td-agent  378 May 31 00:10 hoge.access.20120530_0.log.gz
+-rw-rw-rw-   1 td-agent td-agent  753 May 31 14:07 hoge.access.20120531.b4c14936767dad3e2
 </code></pre>
 
 

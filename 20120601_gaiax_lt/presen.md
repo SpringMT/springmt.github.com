@@ -96,17 +96,17 @@ in_forwar | forward | TCPソケットを待ち受けてその内容を受け取�
 <source>
   type tail
   path /var/log/nginx/access.log
-  tag nginx.cowork
+  tag nginx.hoge
   format /^(?<host>[^ ]*)\t\[(?<time>[^\]]*)\]\t"(?<method>\S+)(?: +(?<path>[^ ]*) +\S*)?"\t(?<status>[^ ]*)\t(?<body_size>[^ ]*)\t(?<response_time>[^ ]*)\t(?:"(?<agent>[^\"]*)"\t"(?<referer>[^\"]*)"\t"(?<http_x_forwarded_for>[^\"]*)"\t(?<gzip_ratio>[^ ]*))?$/
   time_format %d/%b/%Y:%H:%M:%S %z
-  pos_file /var/log/td-agent/tmp/nginx.cowork.pos
+  pos_file /var/log/td-agent/tmp/nginx.hoge.pos
 </source>
 ~~~~
 
 ## 吐き出されるログ
 
 ~~~~
-20120530T090216+0900	nginx.cowork	{
+20120530T090216+0900	nginx.hoge	{
 "host":"192.168.110.160",
 "method":"GET",
 "path":"/register/new",
@@ -265,9 +265,9 @@ server standby | スタンバイのサーバーの場合はyesをセット | |
 ## Output設定例(out_file)
 
 ~~~~
-<match nginx.cowork>
+<match nginx.hoge>
   type file
-  path /var/log/archive/cowork.access
+  path /var/log/archive/hoge.access
   time_slice_format %Y%m%d
   time_slice_wait 1m
   time_format %Y%m%d %H:%M:%S
@@ -292,9 +292,9 @@ compress | ローテートする時にgzip圧縮する |
 total 20K
 drwxrwxrwx   2 root     root     4.0K May 31 08:21 .
 drwxr-xr-x. 18 root     root     4.0K May 29 12:28 ..
--rw-rw-rw-   1 td-agent td-agent  859 May 30 00:10 cowork.access.20120529_0.log.gz
--rw-rw-rw-   1 td-agent td-agent  378 May 31 00:10 cowork.access.20120530_0.log.gz
--rw-rw-rw-   1 td-agent td-agent  753 May 31 14:07 cowork.access.20120531.b4c14936767dad3e2
+-rw-rw-rw-   1 td-agent td-agent  859 May 30 00:10 hoge.access.20120529_0.log.gz
+-rw-rw-rw-   1 td-agent td-agent  378 May 31 00:10 hoge.access.20120530_0.log.gz
+-rw-rw-rw-   1 td-agent td-agent  753 May 31 14:07 hoge.access.20120531.b4c14936767dad3e2
 ~~~~
 
 
